@@ -1,0 +1,32 @@
+name: docs-lint
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  vale:
+    name: Vale（命名・表記ガード）
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Vale
+        run: |
+          curl -sL https://github.com/errata-ai/vale/releases/download/v3.7.1/vale_3.7.1_Linux_64-bit.tar.gz \
+            | sudo tar xz -C /usr/local/bin vale
+      - name: Run Vale
+        run: vale content README.md
+
+  broken-links:
+    name: リンク切れ検査（mint CLI）
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install Mintlify CLI
+        run: npm install -g mint
+      - name: Check broken links
+        run: mint broken-links

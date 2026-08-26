@@ -1,0 +1,35 @@
+name: examples-ci
+
+on:
+  pull_request:
+    paths:
+      - "examples/**"
+  workflow_dispatch:
+
+jobs:
+  compile:
+    name: コード例のコンパイル検証
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: examples
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: "@polastack/sdk の npm 公開状況を確認"
+        id: sdk
+        run: |
+          if npm view @polastack/sdk version >/dev/null 2>&1; then
+            echo "published=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "published=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::@polastack/sdk は npm 未公開のためコンパイル検証をスキップします"
+          fi
+      - name: Install dependencies
+        if: steps.sdk.outputs.published == 'true'
+        run: npm install
+      - name: Type check
+        if: steps.sdk.outputs.published == 'true'
+        run: npx tsc --noEmit
