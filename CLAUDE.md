@@ -14,7 +14,8 @@
    `typedoc.json`（SDK リファレンス元データ)は、いずれも製品リポジトリの CI が自動 PR で更新する生成物。
 5. **`brand/` は手編集禁止**。ロゴ等の正本は `Polastack_GTM/brand-assets/` で、`node scripts/sync-brand.mjs` の生成物をコミットする方式（親ワークスペース共通ルール）。直したいときは正本を直してから sync し直す。push 前に `node scripts/sync-brand.mjs --check` で乖離ゼロを確認する。
 6. コード例は原則 `examples/` の実ファイルから抜粋する（`examples/` は CI でコンパイル検証される）。
-   例題は共通のサンプルスキーマ世界（`projects` / `tasks`）で統一する。
+   例題は共通のサンプルスキーマ世界 =「CRM を作る」（`companies` / `contacts` / `deals` /
+   `quotes` / `quote_lines` / `products`。CEO 裁定 2026-08-26）で統一する。
 
 ## 用語マッピング表（左列の内部名は公開コンテンツで一切使わない）
 
