@@ -1,0 +1,32 @@
+name: ドキュメントのフィードバック
+description: 誤り・古い情報・分かりにくい箇所の報告
+title: "[docs] "
+labels: ["docs-feedback"]
+body:
+  - type: input
+    id: page-url
+    attributes:
+      label: 対象ページの URL
+      placeholder: https://docs.polastack.com/content/...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: 期待した情報・分からなかったこと
+      description: 何を知りたくてこのページに来ましたか
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: 実際の記述の問題点
+      description: 誤り・古い・説明不足など、具体的にお書きください
+    validations:
+      required: true
+  - type: textarea
+    id: suggestion
+    attributes:
+      label: 修正案（任意）
+    validations:
+      required: false
