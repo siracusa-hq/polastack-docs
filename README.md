@@ -9,6 +9,7 @@ Polastack の公開開発者ドキュメント（[docs.polastack.com](https://do
 docs.json          Mintlify 設定（ナビゲーション・テーマ）
 content/           手書きドキュメント（MDX・日本語）
 api-reference/     OpenAPI 仕様（自動更新される生成物。手編集禁止）
+brand/             ロゴ等のブランドアセット（正本からの同期生成物。手編集禁止）
 examples/          ドキュメントに掲載するコード例の実体（CI でコンパイル検証）
 .vale/             表記・命名ガードレール
 ```

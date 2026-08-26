@@ -11,7 +11,8 @@
    実在するのは `polastack.com` 系のみ（docs は `docs.polastack.com`）。
 3. **実装済みの表面だけを書く**。未公開の SDK（Python 等)・未実装の CLI コマンドは、実装が追いつくまで記載禁止。
 4. **`api-reference/` は手編集禁止**。`openapi-public.json` は製品リポジトリの CI が自動 PR で更新する生成物。
-5. コード例は原則 `examples/` の実ファイルから抜粋する（`examples/` は CI でコンパイル検証される）。
+5. **`brand/` は手編集禁止**。ロゴ等の正本は `Polastack_GTM/brand-assets/` で、`node scripts/sync-brand.mjs` の生成物をコミットする方式（親ワークスペース共通ルール）。直したいときは正本を直してから sync し直す。push 前に `node scripts/sync-brand.mjs --check` で乖離ゼロを確認する。
+6. コード例は原則 `examples/` の実ファイルから抜粋する（`examples/` は CI でコンパイル検証される）。
    例題は共通のサンプルスキーマ世界（`projects` / `tasks`）で統一する。
 
 ## 用語マッピング表（左列の内部名は公開コンテンツで一切使わない）
