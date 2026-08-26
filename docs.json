@@ -1,0 +1,64 @@
+{
+  "$schema": "https://mintlify.com/docs.json",
+  "theme": "mint",
+  "name": "Polastack Docs",
+  "description": "Polastack 公開開発者ドキュメント",
+  "colors": {
+    "primary": "#109e81",
+    "light": "#2ee0bc",
+    "dark": "#137663"
+  },
+  "navigation": {
+    "groups": [
+      {
+        "group": "Getting Started",
+        "pages": ["content/getting-started/index"]
+      },
+      {
+        "group": "Modules",
+        "pages": ["content/modules/index"]
+      },
+      {
+        "group": "Developer Tools",
+        "pages": ["content/developer-tools/index"]
+      },
+      {
+        "group": "AI & Agents",
+        "pages": ["content/ai-agents/index"]
+      },
+      {
+        "group": "Security & Compliance",
+        "pages": ["content/security-compliance/index"]
+      },
+      {
+        "group": "API Reference",
+        "pages": ["content/api-reference/index"]
+      },
+      {
+        "group": "Integrations",
+        "pages": ["content/integrations/index"]
+      },
+      {
+        "group": "Guides & Patterns",
+        "pages": ["content/guides-patterns/index"]
+      },
+      {
+        "group": "Migration",
+        "pages": ["content/migration/index"]
+      },
+      {
+        "group": "Changelog",
+        "pages": ["content/changelog/index"]
+      },
+      {
+        "group": "Resources",
+        "pages": ["content/resources/index"]
+      }
+    ]
+  },
+  "footer": {
+    "socials": {
+      "github": "https://github.com/siracusa-hq/polastack-docs"
+    }
+  }
+}

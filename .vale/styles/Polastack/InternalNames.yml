@@ -1,0 +1,6 @@
+extends: existence
+message: "内部モジュール名 '%s' は公開ドキュメントで使用禁止。公開名を使うこと（CLAUDE.md の用語マッピング表を参照）"
+level: error
+ignorecase: false
+tokens:
+  - 'Pola[A-Z][A-Za-z]*'
