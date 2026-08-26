@@ -1,0 +1,30 @@
+---
+title: "llms.txt — サイト全体の索引"
+description: "AI エージェントにドキュメント全体の地図を渡す"
+---
+
+本サイトは [llms.txt 規約](https://llmstxt.org/)に対応しており、2 つのファイルを自動生成しています。
+
+| ファイル | 内容 | 向いている用途 |
+| --- | --- | --- |
+| [`/llms.txt`](https://docs.polastack.com/llms.txt) | 全ページのタイトル・URL・説明の**索引** | エージェントが必要なページを選んで読む(推奨) |
+| [`/llms-full.txt`](https://docs.polastack.com/llms-full.txt) | 全ページの**全文**を 1 ファイルに連結 | コンテキストに全部載せたい小規模な調査 |
+
+## 使い方の例
+
+エージェントへの指示にこう書くだけです。
+
+```text
+Polastack について調べるときは、まず
+https://docs.polastack.com/llms.txt を読んで必要なページを特定し、
+各ページは URL 末尾に .md を付けて取得してください。
+```
+
+索引の各エントリは `.md` 付き URL（[Markdown 取得](/content/ai-agents/markdown-access)）を指しているため、
+エージェントは HTML を経由せずにドキュメント全体を巡回できます。
+
+<Tip>
+ドキュメントが増えると `/llms-full.txt` は大きくなります。
+定常的に使うエージェントには、索引(`/llms.txt`)+ 必要ページの `.md` 取得、
+または [MCP サーバ](/content/ai-agents/mcp)経由の検索を推奨します。
+</Tip>

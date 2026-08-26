@@ -1,0 +1,48 @@
+---
+title: "MCP サーバに接続する"
+description: "docs.polastack.com/mcp をエージェントに登録してドキュメントを検索させる"
+---
+
+本サイトは [Model Context Protocol（MCP）](https://modelcontextprotocol.io/)のサーバをホストしています。
+エージェントに登録すると、このドキュメントを**検索・閲覧するツール**が使えるようになります。
+
+```text
+エンドポイント: https://docs.polastack.com/mcp
+トランスポート: Streamable HTTP / 認証: 不要
+```
+
+## Claude Code に登録する
+
+```bash
+claude mcp add --transport http polastack-docs https://docs.polastack.com/mcp
+```
+
+登録後、「Polastack のテーブル作成方法を docs から調べて」のように指示すると、エージェントが自動でこのサーバを使います。
+
+## 他の MCP クライアント
+
+Streamable HTTP 対応のクライアントであれば、設定ファイルに次のように追加します（形式はクライアントのドキュメントに従ってください）。
+
+```json
+{
+  "mcpServers": {
+    "polastack-docs": {
+      "type": "http",
+      "url": "https://docs.polastack.com/mcp"
+    }
+  }
+}
+```
+
+## 提供されるツール
+
+| ツール | できること |
+| --- | --- |
+| `search_polastack_docs` | ドキュメント全体のキーワード検索。タイトルとページへのリンク付きで結果を返す |
+| `query_docs_filesystem_polastack_docs` | ドキュメントだけを収めた**読み取り専用の仮想ファイルシステム**への問い合わせ（`rg` / `head` / `cat` 相当）。検索で見つけたページの全文を読むのに使う |
+| `submit_feedback` | ドキュメントの誤り・分かりにくさをその場で docs チームに報告する |
+
+<Note>
+この MCP サーバができるのは**ドキュメントの検索・閲覧だけ**です。
+Polastack 製品の API を操作したり、認証が必要な情報にアクセスすることはできません。
+</Note>
