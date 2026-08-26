@@ -29,7 +29,12 @@
       },
       {
         "group": "AI & Agents",
-        "pages": ["content/ai-agents/index"]
+        "pages": [
+          "content/ai-agents/index",
+          "content/ai-agents/markdown-access",
+          "content/ai-agents/llms-txt",
+          "content/ai-agents/mcp"
+        ]
       },
       {
         "group": "Security & Compliance",

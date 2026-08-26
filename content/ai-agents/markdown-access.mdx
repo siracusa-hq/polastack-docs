@@ -1,0 +1,27 @@
+---
+title: "Markdown でページを取得する"
+description: "URL 末尾に .md を付けるだけでクリーンな Markdown が返ります"
+---
+
+本サイトの任意のページは、URL の末尾に `.md` を付けるとクリーンな Markdown として取得できます。
+ナビゲーションやスクリプトを含む HTML と違い、本文だけが返るため、AI エージェントのコンテキストを浪費しません。
+
+```bash
+# HTML ページ
+https://docs.polastack.com/content/getting-started
+
+# 同じ内容の Markdown
+curl https://docs.polastack.com/content/getting-started.md
+```
+
+効果は劇的です。
+例えば Getting Started ページの実測では、HTML が約 200 KB に対して Markdown は約 0.7 KB でした（約 1/300）。
+
+## いつ使うか
+
+- エージェントに**特定のページだけ**を正確に読ませたいとき
+- プロンプトにドキュメントの一部を貼り付けたいとき
+- 独自のインデックス（RAG 等）を構築するとき
+
+返される Markdown の冒頭には、全ページ索引（[llms.txt](/content/ai-agents/llms-txt)）への案内が含まれます。
+エージェントはそこから他のページを自律的に辿れます。
