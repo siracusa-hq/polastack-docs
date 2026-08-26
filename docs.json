@@ -4,10 +4,15 @@
   "name": "Polastack Docs",
   "description": "Polastack 公開開発者ドキュメント",
   "colors": {
-    "primary": "#109e81",
-    "light": "#2ee0bc",
-    "dark": "#137663"
+    "primary": "#2f4989",
+    "light": "#7da5fd",
+    "dark": "#2d3f68"
   },
+  "logo": {
+    "light": "/brand/polastack/logo-lockup.svg",
+    "dark": "/brand/polastack/logo-lockup-white.svg"
+  },
+  "favicon": "/brand/polastack/logo-mark.svg",
   "navigation": {
     "groups": [
       {
