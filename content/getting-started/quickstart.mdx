@@ -1,0 +1,126 @@
+---
+title: "Quickstart"
+description: "最初のテーブルを作成し、REST API で呼び出すまで"
+---
+
+このガイドでは、CRM の最初のテーブル「会社(companies)」を作成し、REST API でレコードを操作するところまでを行います。
+所要時間は 10 分程度です。
+
+## 前提
+
+- クローズドベータ参加者として、**テナントと管理ダッシュボードへのアクセス**をお持ちであること
+- `curl` が使えるターミナル環境
+
+以降の `<YOUR_TENANT>` は、お使いのテナント名に読み替えてください。
+
+## 認証の準備
+
+### 1. M2M アプリを作成する
+
+プログラムから API を呼ぶためのクレデンシャルを発行します。
+
+1. 管理ダッシュボードにログインし、**Apps** を開きます
+2. 新しい M2M アプリを作成します（名前は `quickstart` など任意）
+3. 表示された `client_id` と `client_secret` を控えます
+
+<Warning>
+`client_secret` は**発行時に一度しか表示されず、後から再取得できません**。
+環境変数やシークレット管理ツールで安全に保管してください。
+</Warning>
+
+### 2. アクセストークンを取得する
+
+控えたクレデンシャルでアクセストークンを取得します。
+
+```bash
+curl -X POST https://<YOUR_TENANT>.polastack.com/m2m/token \
+  -H "Content-Type: application/json" \
+  -d '{
+    "client_id": "<YOUR_CLIENT_ID>",
+    "client_secret": "<YOUR_CLIENT_SECRET>"
+  }'
+```
+
+レスポンスに `access_token`（および `expires_in`・`scope`）が返ります。
+以降のリクエストでは、このトークンを `Authorization: Bearer` ヘッダに付けます。
+トークンには有効期限があるため、期限切れ（401 応答）の際は再取得してください。
+
+## 最初のテーブルを作る
+
+### 3. ダッシュボードで companies テーブルを作成する
+
+1. 管理ダッシュボードの **Database** を開きます
+2. 新しいテーブル `companies`（表示名: 会社）を作成します
+3. カラムを追加します:
+
+| カラム | 型 | 必須 |
+| --- | --- | --- |
+| `name`（会社名） | 文字列 | ✓ |
+| `website`（Web サイト） | URL | — |
+| `industry`（業種） | 文字列 | — |
+
+テーブルを定義した時点で、このテーブルの REST API が使えるようになっています。
+
+## REST API で操作する
+
+### 4. レコードを作成する
+
+```bash
+curl -X POST https://<YOUR_TENANT>.polastack.com/api/v1/tables/companies/records \
+  -H "Authorization: Bearer <YOUR_ACCESS_TOKEN>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "アクメ商事",
+    "website": "https://example.com",
+    "industry": "manufacturing"
+  }'
+```
+
+作成されたレコードが ID 付きで返ります。次のステップで使うので控えてください。
+
+### 5. レコードを取得する
+
+一覧の取得:
+
+```bash
+curl https://<YOUR_TENANT>.polastack.com/api/v1/tables/companies/records \
+  -H "Authorization: Bearer <YOUR_ACCESS_TOKEN>"
+```
+
+1 件の取得:
+
+```bash
+curl https://<YOUR_TENANT>.polastack.com/api/v1/tables/companies/records/<YOUR_RECORD_ID> \
+  -H "Authorization: Bearer <YOUR_ACCESS_TOKEN>"
+```
+
+### 6. レコードを更新・削除する
+
+更新（変更するフィールドだけを送ります）:
+
+```bash
+curl -X PATCH https://<YOUR_TENANT>.polastack.com/api/v1/tables/companies/records/<YOUR_RECORD_ID> \
+  -H "Authorization: Bearer <YOUR_ACCESS_TOKEN>" \
+  -H "Content-Type: application/json" \
+  -d '{ "industry": "it_services" }'
+```
+
+削除:
+
+```bash
+curl -X DELETE https://<YOUR_TENANT>.polastack.com/api/v1/tables/companies/records/<YOUR_RECORD_ID> \
+  -H "Authorization: Bearer <YOUR_ACCESS_TOKEN>"
+```
+
+これで「テーブルを定義して、REST API で CRUD する」という Polastack の基本サイクルを一周しました。
+
+## 次に読む
+
+- [How Polastack works](/content/getting-started/how-it-works) — いま体験した流れの全体像とメンタルモデル
+- [認証・認可モデル概要](/content/getting-started/auth-model) — トークンと権限の仕組みを詳しく
+- [Modules](/content/modules) — 担当者・商談とテーブルを増やし、検索・分析へ広げる次の一歩
+
+<Note>
+うまくいかないときは: 401 はトークンの期限切れ（再取得してください）、404 はテーブル名・レコード ID・テナント名の確認を。
+解決しない場合は [Resources](/content/resources) の窓口へどうぞ。
+</Note>
