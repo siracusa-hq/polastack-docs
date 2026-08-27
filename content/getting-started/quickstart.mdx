@@ -36,6 +36,7 @@ description: "最初のテーブルを作成し、REST API で呼び出すまで
 curl -X POST https://<YOUR_TENANT>.polastack.com/m2m/token \
   -H "Content-Type: application/json" \
   -d '{
+    "grant_type": "client_credentials",
     "client_id": "<YOUR_CLIENT_ID>",
     "client_secret": "<YOUR_CLIENT_SECRET>"
   }'
@@ -57,7 +58,9 @@ curl -X POST https://<YOUR_TENANT>.polastack.com/m2m/token \
 | --- | --- | --- |
 | `name`（会社名） | 文字列 | ✓ |
 | `website`（Web サイト） | URL | — |
-| `industry`（業種） | 文字列 | — |
+| `industry`（業種） | 文字列（選択式） | — |
+
+`industry` は選択式（enum）とし、選択肢に `manufacturing` / `retail` / `it_services` / `finance` / `other` を設定します。
 
 テーブルを定義した時点で、このテーブルの REST API が使えるようになっています。
 
