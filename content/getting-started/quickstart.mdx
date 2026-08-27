@@ -73,13 +73,16 @@ curl -X POST https://<YOUR_TENANT>.polastack.com/api/v1/tables/companies/records
   -H "Authorization: Bearer <YOUR_ACCESS_TOKEN>" \
   -H "Content-Type: application/json" \
   -d '{
-    "name": "アクメ商事",
-    "website": "https://example.com",
-    "industry": "manufacturing"
+    "data": {
+      "name": "アクメ商事",
+      "website": "https://example.com",
+      "industry": "manufacturing"
+    }
   }'
 ```
 
-作成されたレコードが ID 付きで返ります。次のステップで使うので控えてください。
+作成されたレコードが ID（UUID）付きで返ります。次のステップで使うので控えてください。
+レコードの中身は `data` キーでラップして送る点に注意してください（更新も同様です）。
 
 ### 5. レコードを取得する
 
@@ -99,13 +102,13 @@ curl https://<YOUR_TENANT>.polastack.com/api/v1/tables/companies/records/<YOUR_R
 
 ### 6. レコードを更新・削除する
 
-更新（変更するフィールドだけを送ります）:
+更新（`data` の中に、変更するフィールドだけを入れて送ります）:
 
 ```bash
 curl -X PATCH https://<YOUR_TENANT>.polastack.com/api/v1/tables/companies/records/<YOUR_RECORD_ID> \
   -H "Authorization: Bearer <YOUR_ACCESS_TOKEN>" \
   -H "Content-Type: application/json" \
-  -d '{ "industry": "it_services" }'
+  -d '{ "data": { "industry": "it_services" } }'
 ```
 
 削除:
