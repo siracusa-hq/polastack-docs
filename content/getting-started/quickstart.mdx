@@ -4,7 +4,7 @@ description: "最初のテーブルを作成し、REST API で呼び出すまで
 ---
 
 このガイドでは、CRM の最初のテーブル「会社(companies)」を作成し、REST API でレコードを操作するところまでを行います。
-所要時間は 10 分程度です。
+所要時間は 15 分程度です。
 
 ## 前提
 
@@ -28,7 +28,16 @@ description: "最初のテーブルを作成し、REST API で呼び出すまで
 環境変数やシークレット管理ツールで安全に保管してください。
 </Warning>
 
-### 2. アクセストークンを取得する
+### 2. アプリをセキュリティグループに追加する
+
+プログラムからのアクセスは常に非特権で、**セキュリティグループ経由で権限を得ます**（[認証・認可モデル概要](/content/getting-started/auth-model)参照）。
+作成直後のアプリはどのグループにも属していないため、このままでは API を呼んでも 403 になります。
+
+1. サイドバーの**権限 (Permissions)** を開きます
+2. セキュリティグループを選びます（無ければ `quickstart-group` など任意の名前で作成します）
+3. グループの詳細から「**+ メンバー追加**」で、手順 1 で作った `quickstart` アプリを追加します
+
+### 3. アクセストークンを取得する
 
 控えたクレデンシャルでアクセストークンを取得します。
 
@@ -48,7 +57,7 @@ curl -X POST https://<YOUR_TENANT>.polastack.com/m2m/token \
 
 ## 最初のテーブルを作る
 
-### 3. ダッシュボードで companies テーブルを作成する
+### 4. companies テーブルを作成し、アクセス権を付与する
 
 1. 管理ダッシュボードのサイドバーで**データベース (Database)** を開きます
 2. 新しいテーブルを作成します。表示名に「会社」を入力し、slug を `companies` にします（slug は表示名から自動生成されるので、手で `companies` に直します）
@@ -62,11 +71,18 @@ curl -X POST https://<YOUR_TENANT>.polastack.com/m2m/token \
 
 `industry` は「選択 (select)」型にし、カラム編集の「型設定」タブで選択肢に `manufacturing` / `retail` / `it_services` / `finance` / `other` を追加します。
 
+4. 同じ作成画面の「**アクセス権限 (TLS)**」で、手順 2 のセキュリティグループに **読取(R)・書込(W)・削除(D)** を許可します
+
+<Note>
+この付与を忘れると、テーブルは作成できても API からのアクセスが 403 になります。
+（管理ダッシュボードにログインしている owner / admin 自身は常にアクセスできるため、GUI 上では気づきにくい点に注意）
+</Note>
+
 テーブルを定義した時点で、このテーブルの REST API が使えるようになっています。
 
 ## REST API で操作する
 
-### 4. レコードを作成する
+### 5. レコードを作成する
 
 ```bash
 curl -X POST https://<YOUR_TENANT>.polastack.com/api/v1/tables/companies/records \
@@ -84,7 +100,7 @@ curl -X POST https://<YOUR_TENANT>.polastack.com/api/v1/tables/companies/records
 作成されたレコードが ID（UUID）付きで返ります。次のステップで使うので控えてください。
 レコードの中身は `data` キーでラップして送る点に注意してください（更新も同様です）。
 
-### 5. レコードを取得する
+### 6. レコードを取得する
 
 一覧の取得:
 
@@ -100,7 +116,7 @@ curl https://<YOUR_TENANT>.polastack.com/api/v1/tables/companies/records/<YOUR_R
   -H "Authorization: Bearer <YOUR_ACCESS_TOKEN>"
 ```
 
-### 6. レコードを更新・削除する
+### 7. レコードを更新・削除する
 
 更新（`data` の中に、変更するフィールドだけを入れて送ります）:
 
@@ -118,7 +134,7 @@ curl -X DELETE https://<YOUR_TENANT>.polastack.com/api/v1/tables/companies/recor
   -H "Authorization: Bearer <YOUR_ACCESS_TOKEN>"
 ```
 
-これで「テーブルを定義して、REST API で CRUD する」という Polastack の基本サイクルを一周しました。
+これで「テーブルを定義して、アクセス権を付与し、REST API で CRUD する」という Polastack の基本サイクルを一周しました。
 
 ## 次に読む
 
@@ -127,6 +143,8 @@ curl -X DELETE https://<YOUR_TENANT>.polastack.com/api/v1/tables/companies/recor
 - [Modules](/content/modules) — 担当者・商談とテーブルを増やし、検索・分析へ広げる次の一歩
 
 <Note>
-うまくいかないときは: 401 はトークンの期限切れ（再取得してください）、404 はテーブル名・レコード ID・テナント名の確認を。
+うまくいかないときは: 401 はトークンの期限切れ（再取得してください）、
+**403 はアクセス権**（手順 2 のグループ所属と手順 4 の「アクセス権限 (TLS)」の付与を確認）、
+404 はテーブル名・レコード ID・テナント名の確認を。
 解決しない場合は [Resources](/content/resources) の窓口へどうぞ。
 </Note>
