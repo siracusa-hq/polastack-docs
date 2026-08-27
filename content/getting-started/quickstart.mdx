@@ -1,0 +1,154 @@
+---
+title: "Quickstart"
+description: "最初のテーブルを作成し、REST API で呼び出すまで"
+---
+
+このガイドでは、CRM の最初のテーブル「会社(companies)」を作成し、REST API でレコードを操作するところまでを行います。
+所要時間は 15 分程度です。
+
+## 前提
+
+- クローズドベータ参加者として、**テナントと管理ダッシュボードへのアクセス**をお持ちであること
+- **テナントに GitHub リポジトリが接続済み**であること（テーブル定義は Git 経由で管理されるため。未接続の場合は設定 (Settings) 画面から接続してください）
+- `curl` が使えるターミナル環境
+
+以降の `<YOUR_TENANT>` は、お使いのテナント名に読み替えてください。
+
+## 認証の準備
+
+### 1. M2M アプリを作成する
+
+プログラムから API を呼ぶためのクレデンシャルを発行します。
+
+1. 管理ダッシュボードにログインし、サイドバーの**アプリ (Apps)** を開きます
+2. 新しいアプリを作成します（名前は `quickstart` など任意）
+3. 作成時のダイアログに表示される `client_id` と `client_secret` を控えます
+
+<Warning>
+`client_secret` は**発行時に一度しか表示されず、後から再取得できません**。
+環境変数やシークレット管理ツールで安全に保管してください。
+</Warning>
+
+### 2. アプリをセキュリティグループに追加する
+
+プログラムからのアクセスは常に非特権で、**セキュリティグループ経由で権限を得ます**（[認証・認可モデル概要](/content/getting-started/auth-model)参照）。
+作成直後のアプリはどのグループにも属していないため、このままでは API を呼んでも 403 になります。
+
+1. サイドバーの**権限 (Permissions)** を開きます
+2. セキュリティグループを選びます（無ければ `quickstart-group` など任意の名前で作成します）
+3. グループの詳細から「**+ メンバー追加**」で、手順 1 で作った `quickstart` アプリを追加します
+
+### 3. アクセストークンを取得する
+
+控えたクレデンシャルでアクセストークンを取得します。
+
+```bash
+curl -X POST https://<YOUR_TENANT>.polastack.com/m2m/token \
+  -H "Content-Type: application/json" \
+  -d '{
+    "grant_type": "client_credentials",
+    "client_id": "<YOUR_CLIENT_ID>",
+    "client_secret": "<YOUR_CLIENT_SECRET>"
+  }'
+```
+
+レスポンスに `access_token`（および `expires_in`・`scope`）が返ります。
+以降のリクエストでは、このトークンを `Authorization: Bearer` ヘッダに付けます。
+トークンには有効期限があるため、期限切れ（401 応答）の際は再取得してください。
+
+## 最初のテーブルを作る
+
+### 4. companies テーブルを作成し、アクセス権を付与する
+
+1. 管理ダッシュボードのサイドバーで**データベース (Database)** を開きます
+2. 新しいテーブルを作成します。表示名に「会社」を入力し、slug を `companies` にします（slug は表示名から自動生成されるので、手で `companies` に直します）
+3. あわせてカラムを追加します:
+
+| カラム名 (slug) | 表示名 | 型 | 必須 |
+| --- | --- | --- | --- |
+| `name` | 会社名 | テキスト (text) | ✓ |
+| `website` | Web サイト | テキスト (text) | — |
+| `industry` | 業種 | 選択 (select) | — |
+
+`industry` は「選択 (select)」型にし、カラム編集の「型設定」タブで選択肢に `manufacturing` / `retail` / `it_services` / `finance` / `other` を追加します。
+
+4. 同じ作成画面の「**アクセス権限 (TLS)**」で、手順 2 のセキュリティグループに **読取(R)・書込(W)・削除(D)** を許可します
+
+<Note>
+この付与を忘れると、テーブルは作成できても API からのアクセスが 403 になります。
+（管理ダッシュボードにログインしている owner / admin 自身は常にアクセスできるため、GUI 上では気づきにくい点に注意）
+</Note>
+
+テーブルの作成は Git へのコミットを経由して反映され、**完了まで数十秒かかることがあります**。
+ダイアログの完了表示を待ってから次に進んでください（反映前に API を叩くと 403/404 になることがあります）。
+
+反映が完了した時点で、このテーブルの REST API が使えるようになっています。
+
+## REST API で操作する
+
+### 5. レコードを作成する
+
+```bash
+curl -X POST https://<YOUR_TENANT>.polastack.com/api/v1/tables/companies/records \
+  -H "Authorization: Bearer <YOUR_ACCESS_TOKEN>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "data": {
+      "name": "アクメ商事",
+      "website": "https://example.com",
+      "industry": "manufacturing"
+    }
+  }'
+```
+
+作成されたレコードが ID（UUID）付きで返ります。次のステップで使うので控えてください。
+レコードの中身は `data` キーでラップして送る点に注意してください（更新も同様です）。
+
+### 6. レコードを取得する
+
+一覧の取得:
+
+```bash
+curl https://<YOUR_TENANT>.polastack.com/api/v1/tables/companies/records \
+  -H "Authorization: Bearer <YOUR_ACCESS_TOKEN>"
+```
+
+1 件の取得:
+
+```bash
+curl https://<YOUR_TENANT>.polastack.com/api/v1/tables/companies/records/<YOUR_RECORD_ID> \
+  -H "Authorization: Bearer <YOUR_ACCESS_TOKEN>"
+```
+
+### 7. レコードを更新・削除する
+
+更新（`data` の中に、変更するフィールドだけを入れて送ります）:
+
+```bash
+curl -X PATCH https://<YOUR_TENANT>.polastack.com/api/v1/tables/companies/records/<YOUR_RECORD_ID> \
+  -H "Authorization: Bearer <YOUR_ACCESS_TOKEN>" \
+  -H "Content-Type: application/json" \
+  -d '{ "data": { "industry": "it_services" } }'
+```
+
+削除:
+
+```bash
+curl -X DELETE https://<YOUR_TENANT>.polastack.com/api/v1/tables/companies/records/<YOUR_RECORD_ID> \
+  -H "Authorization: Bearer <YOUR_ACCESS_TOKEN>"
+```
+
+これで「テーブルを定義して、アクセス権を付与し、REST API で CRUD する」という Polastack の基本サイクルを一周しました。
+
+## 次に読む
+
+- [How Polastack works](/content/getting-started/how-it-works) — いま体験した流れの全体像とメンタルモデル
+- [認証・認可モデル概要](/content/getting-started/auth-model) — トークンと権限の仕組みを詳しく
+- [Modules](/content/modules) — 担当者・商談とテーブルを増やし、検索・分析へ広げる次の一歩
+
+<Note>
+うまくいかないときは: 401 はトークンの期限切れ（再取得してください）、
+**403 はアクセス権**（手順 2 のグループ所属と手順 4 の「アクセス権限 (TLS)」の付与を確認）、
+404 はテーブル名・レコード ID・テナント名の確認を。
+解決しない場合は [Resources](/content/resources) の窓口へどうぞ。
+</Note>

@@ -19,17 +19,22 @@
         "group": "Getting Started",
         "pages": [
           "content/getting-started/index",
+          "content/getting-started/quickstart",
           "content/getting-started/how-it-works",
           "content/getting-started/auth-model"
         ]
       },
       {
         "group": "Modules",
-        "pages": ["content/modules/index"]
+        "pages": [
+          "content/modules/index"
+        ]
       },
       {
         "group": "Developer Tools",
-        "pages": ["content/developer-tools/index"]
+        "pages": [
+          "content/developer-tools/index"
+        ]
       },
       {
         "group": "AI & Agents",
@@ -42,31 +47,45 @@
       },
       {
         "group": "Security & Compliance",
-        "pages": ["content/security-compliance/index"]
+        "pages": [
+          "content/security-compliance/index"
+        ]
       },
       {
         "group": "API Reference",
-        "pages": ["content/api-reference/index"]
+        "pages": [
+          "content/api-reference/index"
+        ]
       },
       {
         "group": "Integrations",
-        "pages": ["content/integrations/index"]
+        "pages": [
+          "content/integrations/index"
+        ]
       },
       {
         "group": "Guides & Patterns",
-        "pages": ["content/guides-patterns/index"]
+        "pages": [
+          "content/guides-patterns/index"
+        ]
       },
       {
         "group": "Migration",
-        "pages": ["content/migration/index"]
+        "pages": [
+          "content/migration/index"
+        ]
       },
       {
         "group": "Changelog",
-        "pages": ["content/changelog/index"]
+        "pages": [
+          "content/changelog/index"
+        ]
       },
       {
         "group": "Resources",
-        "pages": ["content/resources/index"]
+        "pages": [
+          "content/resources/index"
+        ]
       }
     ]
   },
