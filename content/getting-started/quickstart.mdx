@@ -19,9 +19,9 @@ description: "最初のテーブルを作成し、REST API で呼び出すまで
 
 プログラムから API を呼ぶためのクレデンシャルを発行します。
 
-1. 管理ダッシュボードにログインし、**Apps** を開きます
-2. 新しい M2M アプリを作成します（名前は `quickstart` など任意）
-3. 表示された `client_id` と `client_secret` を控えます
+1. 管理ダッシュボードにログインし、サイドバーの**アプリ (Apps)** を開きます
+2. 新しいアプリを作成します（名前は `quickstart` など任意）
+3. 作成時のダイアログに表示される `client_id` と `client_secret` を控えます
 
 <Warning>
 `client_secret` は**発行時に一度しか表示されず、後から再取得できません**。
@@ -50,17 +50,17 @@ curl -X POST https://<YOUR_TENANT>.polastack.com/m2m/token \
 
 ### 3. ダッシュボードで companies テーブルを作成する
 
-1. 管理ダッシュボードの **Database** を開きます
-2. 新しいテーブル `companies`（表示名: 会社）を作成します
-3. カラムを追加します:
+1. 管理ダッシュボードのサイドバーで**データベース (Database)** を開きます
+2. 新しいテーブルを作成します。表示名に「会社」を入力し、slug を `companies` にします（slug は表示名から自動生成されるので、手で `companies` に直します）
+3. あわせてカラムを追加します:
 
-| カラム | 型 | 必須 |
-| --- | --- | --- |
-| `name`（会社名） | 文字列 | ✓ |
-| `website`（Web サイト） | URL | — |
-| `industry`（業種） | 文字列（選択式） | — |
+| カラム名 (slug) | 表示名 | 型 | 必須 |
+| --- | --- | --- | --- |
+| `name` | 会社名 | テキスト (text) | ✓ |
+| `website` | Web サイト | テキスト (text) | — |
+| `industry` | 業種 | 選択 (select) | — |
 
-`industry` は選択式（enum）とし、選択肢に `manufacturing` / `retail` / `it_services` / `finance` / `other` を設定します。
+`industry` は「選択 (select)」型にし、カラム編集の「型設定」タブで選択肢に `manufacturing` / `retail` / `it_services` / `finance` / `other` を追加します。
 
 テーブルを定義した時点で、このテーブルの REST API が使えるようになっています。
 
