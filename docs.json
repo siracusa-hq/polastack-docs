@@ -17,7 +17,11 @@
     "groups": [
       {
         "group": "Getting Started",
-        "pages": ["content/getting-started/index"]
+        "pages": [
+          "content/getting-started/index",
+          "content/getting-started/how-it-works",
+          "content/getting-started/auth-model"
+        ]
       },
       {
         "group": "Modules",
