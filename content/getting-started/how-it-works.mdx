@@ -1,0 +1,48 @@
+---
+title: "How Polastack works"
+description: "スキーマ定義からバックエンド生成、API 利用までの全体像"
+---
+
+Polastack の中核は、**スキーマを定義するとバックエンドが用意される**というループです。
+例題の CRM を作る流れで見てみます。
+
+<Steps>
+  <Step title="スキーマを定義する">
+    「会社(companies)」テーブルを、会社名・Web サイト・業種などのカラムとともに定義します。
+    定義は管理ダッシュボードの GUI からも、構成ファイル（Config as Code）からも行えます。
+  </Step>
+  <Step title="バックエンドが用意される">
+    テーブルを定義すると、データベースと REST API（作成・取得・更新・削除）が使える状態になります。
+    API のリファレンス（OpenAPI 仕様）も定義から自動で導出されます。
+  </Step>
+  <Step title="呼び出して組み立てる">
+    アプリケーションからは REST API でデータを操作します（SDK も一般公開にあわせて提供予定です）。
+    認証は[認証・認可モデル](/content/getting-started/auth-model)の仕組みで行います。
+  </Step>
+</Steps>
+
+スキーマを育てるほど使える API が増えていく — これが Polastack での開発の基本サイクルです。
+担当者(contacts)・商談(deals)・見積(quotes)とテーブルを足していけば、CRM のバックエンドが形になっていきます。
+
+## 基本概念
+
+| 概念 | 説明 |
+| --- | --- |
+| テナント | 契約単位の分離された環境。データ・認証・APIはテナントごとに分離されます |
+| テーブル | データ構造の定義。CRM 例題なら companies・contacts・deals など |
+| レコード | テーブルに入る個々のデータ。REST API の操作対象 |
+| リレーション | テーブル間の参照。「商談は会社に属する」のような関係を表します |
+
+## モジュールとの関係
+
+この中核ループを、[各モジュール](/content/modules)が役割分担で支えます。
+
+- **Database** がスキーマとデータを管理し、
+- **Gateway** が REST API の入口と OpenAPI 仕様の導出を担い、
+- **Auth** がアクセスを守ります。
+- その上に検索（Search)・集計(Analytics)・イベント(Events)などが積み重なります。
+
+## 次に読む
+
+- [認証・認可モデル概要](/content/getting-started/auth-model) — API を呼ぶ前に知っておく認証の仕組み
+- [Modules](/content/modules) — 各モジュールで何ができるか
